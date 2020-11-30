@@ -10,6 +10,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FileService implements IFile {
@@ -42,5 +44,14 @@ public class FileService implements IFile {
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!");
         }
+    }
+
+    @Override
+    public List<String> getFiles() throws IOException {
+
+        return Files.walk(Paths.get(fileDirectoryConstants.getUploadDir()))
+                .filter(Files::isRegularFile)
+                .map(file -> file.getFileName().toString())
+                .collect(Collectors.toList());
     }
 }

@@ -14,10 +14,12 @@ export class FilesComponent implements OnInit {
   currentFile: File;
   progress = 0;
   message = '';
+  fileInfos: Observable<any>;
 
   constructor(private fileService: FileService) { }
 
   ngOnInit(): void {
+    this.fileInfos = this.fileService.getFiles();
   }
 
   selectFile(event) {
@@ -34,6 +36,7 @@ export class FilesComponent implements OnInit {
           this.progress = Math.round(100 * event.loaded / event.total);
         } else if (event instanceof HttpResponse) {
           this.message = event.body.message;
+          this.fileInfos = this.fileService.getFiles();
         }
       },
       err => {

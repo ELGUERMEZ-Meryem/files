@@ -20,4 +20,9 @@ export class FileService {
 
     return this.http.request(req);
   }
+
+  getFiles(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/files`);
+  }
+
 }
