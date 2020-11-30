@@ -20,7 +20,7 @@ public class FileController {
     }
 
     @PostMapping("/upload-file")
-    public ResponseEntity<Boolean> uploadDocument(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<Boolean> uploadFile(@RequestParam("file") MultipartFile file) {
         try {
             fileService.uploadFile(file.getInputStream(), StringUtils.cleanPath(file.getOriginalFilename()));
             return ResponseEntity.ok(true);

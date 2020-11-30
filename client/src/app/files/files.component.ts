@@ -13,6 +13,7 @@ export class FilesComponent implements OnInit {
   selectedFiles: FileList;
   currentFile: File;
   progress = 0;
+  progressInfos = [];
   message = '';
   fileInfos: Observable<any>;
 
@@ -23,10 +24,37 @@ export class FilesComponent implements OnInit {
   }
 
   selectFile(event) {
+    this.progressInfos = [];
     this.selectedFiles = event.target.files;
   }
 
-  upload() {
+  uploadFiles() {
+    this.message = '';
+
+    for (let i = 0; i < this.selectedFiles.length; i++) {
+      this.upload(i, this.selectedFiles[i]);
+    }
+
+  }
+
+  upload(index, file) {
+    this.progressInfos[index] = { value: 0, fileName: file.name };
+
+    this.fileService.upload(file).subscribe(
+      event => {
+        if (event.type === HttpEventType.UploadProgress) {
+          this.progressInfos[index].value = Math.round(100 * event.loaded / event.total);
+        } else if (event instanceof HttpResponse) {
+          this.fileInfos = this.fileService.getFiles();
+        }
+      },
+      err => {
+        this.progressInfos[index].value = 0;
+        this.message = 'Could not upload the file:' + file.name;
+      });
+  }
+
+  uploadFile() {
     this.progress = 0;
 
     this.currentFile = this.selectedFiles.item(0);
