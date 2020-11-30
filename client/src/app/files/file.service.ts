@@ -21,6 +21,21 @@ export class FileService {
     return this.http.request(req);
   }
 
+  uploadOneRequest(files: File[]): Observable<HttpEvent<any>> {
+    const formData: FormData = new FormData();
+
+    for (let file of files) {
+      formData.append('files[]', file);
+    }
+
+    const req = new HttpRequest('POST', `${environment.apiUrl}/upload-files`, formData, {
+      reportProgress: true,
+      responseType: 'json'
+    });
+
+    return this.http.request(req);
+  }
+
   getFiles(): Observable<any> {
     return this.http.get(`${environment.apiUrl}/files`);
   }

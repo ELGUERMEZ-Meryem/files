@@ -10,7 +10,7 @@ import {HttpEventType, HttpResponse} from "@angular/common/http";
 })
 export class FilesComponent implements OnInit {
 
-  selectedFiles: FileList;
+  selectedFiles: File[];
   currentFile: File;
   progress = 0;
   progressInfos = [];
@@ -23,8 +23,12 @@ export class FilesComponent implements OnInit {
     this.fileInfos = this.fileService.getFiles();
   }
 
-  selectFile(event) {
+  selectFiles(event) {
     this.progressInfos = [];
+    this.selectedFiles = event.target.files;
+  }
+
+  selectFile(event) {
     this.selectedFiles = event.target.files;
   }
 
@@ -57,8 +61,30 @@ export class FilesComponent implements OnInit {
   uploadFile() {
     this.progress = 0;
 
-    this.currentFile = this.selectedFiles.item(0);
+    this.currentFile = this.selectedFiles[0];
     this.fileService.upload(this.currentFile).subscribe(
+      event => {
+        if (event.type === HttpEventType.UploadProgress) {
+          this.progress = Math.round(100 * event.loaded / event.total);
+        } else if (event instanceof HttpResponse) {
+          this.message = event.body.message;
+          this.fileInfos = this.fileService.getFiles();
+        }
+      },
+      err => {
+        this.progress = 0;
+        this.message = 'Could not upload the file!';
+        this.currentFile = undefined;
+      });
+
+    this.currentFile = undefined;
+  }
+
+  uploadFilesOneRequest() {
+    this.progress = 0;
+
+    this.currentFile = this.selectedFiles[0];
+    this.fileService.uploadOneRequest(this.selectedFiles).subscribe(
       event => {
         if (event.type === HttpEventType.UploadProgress) {
           this.progress = Math.round(100 * event.loaded / event.total);

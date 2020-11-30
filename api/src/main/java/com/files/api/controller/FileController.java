@@ -29,6 +29,18 @@ public class FileController {
         }
     }
 
+    @PostMapping("/upload-files")
+    public ResponseEntity<Boolean> uploadFiles(@RequestParam("files[]") List<MultipartFile> files) {
+        try {
+            for (MultipartFile file : files) {
+                fileService.uploadFile(file.getInputStream(), StringUtils.cleanPath(file.getOriginalFilename()));
+            }
+            return ResponseEntity.ok(true);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
     @GetMapping("/files")
     public ResponseEntity<List<String>> getFiles() {
         try {
