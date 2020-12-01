@@ -11,6 +11,7 @@ This application is for File upload in that user can:
 1. application.properties:
 
 – spring.servlet.multipart.max-file-size: max file size for each request.
+
 – spring.servlet.multipart.max-request-size: max request size for a multipart/form-data.
 
 # Save files in a static directory
