@@ -14,13 +14,10 @@ This application is for File upload in that user can:
 
 – spring.servlet.multipart.max-request-size: max request size for a multipart/form-data.
 
-# Save files in a static directory
-
-
-
-# Save files in the database:
-
-# Save files in a remote server like aws:
+2. Where to upload files:
+- Save files in a static directory.
+- Save files in the database.
+- Save files in a remote server like aws.
 
 # Resources:
 https://bezkoder.com/spring-boot-upload-file-database/
