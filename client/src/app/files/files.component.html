@@ -102,13 +102,25 @@
 <div class="alert alert-light" role="alert">{{ message }}</div>
 
 <div class="card">
-  <div class="card-header">List of Files</div>
+  <div class="card-header">List of Files in static directory</div>
   <ul
     class="list-group list-group-flush"
     *ngFor="let file of fileInfos | async"
   >
     <li class="list-group-item">
       <a href="">{{ file }}</a>
+    </li>
+  </ul>
+</div>
+
+<div class="card">
+  <div class="card-header">List of Files in database</div>
+  <ul
+    class="list-group list-group-flush"
+    *ngFor="let file of fileInfosInDatabase | async"
+  >
+    <li class="list-group-item">
+      <a style="cursor: pointer;" (click)="uploadFileById(file.id)">{{ file.name }}</a>
     </li>
   </ul>
 </div>

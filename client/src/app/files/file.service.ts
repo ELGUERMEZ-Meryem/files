@@ -53,4 +53,11 @@ export class FileService {
     return this.http.get(`${environment.apiUrl}/files`);
   }
 
+  getFilesFromDatabase(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/files-from-database`);
+  }
+
+  getFileById(id: string): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/file-by-id`, id);
+  }
 }

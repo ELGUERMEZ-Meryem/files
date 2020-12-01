@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {FileService} from "./file.service";
 import {Observable} from "rxjs";
 import {HttpEventType, HttpResponse} from "@angular/common/http";
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-files',
@@ -16,11 +17,13 @@ export class FilesComponent implements OnInit {
   progressInfos = [];
   message = '';
   fileInfos: Observable<any>;
+  fileInfosInDatabase: Observable<any>;
 
   constructor(private fileService: FileService) { }
 
   ngOnInit(): void {
     this.fileInfos = this.fileService.getFiles();
+    this.fileInfosInDatabase = this.fileService.getFilesFromDatabase();
   }
 
   selectFiles(event) {
@@ -89,6 +92,7 @@ export class FilesComponent implements OnInit {
           this.progress = Math.round(100 * event.loaded / event.total);
         } else if (event instanceof HttpResponse) {
           this.message = event.body.message;
+          this.fileInfosInDatabase = this.fileService.getFilesFromDatabase();
         }
       },
       err => {
@@ -122,4 +126,15 @@ export class FilesComponent implements OnInit {
     this.currentFile = undefined;
   }
 
+  uploadFileById(id: string) {
+    this.fileService.getFileById(id).subscribe(
+      data => {
+        saveAs(data.data, data.name);
+
+      },
+      err => {
+        this.message = 'Could not get the file!';
+      });
+
+  }
 }

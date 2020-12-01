@@ -1,5 +1,6 @@
 package com.files.api.controller;
 
+import com.files.api.entity.File;
 import com.files.api.service.FileService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,6 +56,24 @@ public class FileController {
     public ResponseEntity<List<String>> getFiles() {
         try {
             return ResponseEntity.ok(fileService.getFiles());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    @PostMapping("/file-by-id")
+    public ResponseEntity<File> getFileById(@RequestBody String id) {
+        try {
+            return ResponseEntity.ok(fileService.getFile(Long.parseLong(id)));
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    @GetMapping("/files-from-database")
+    public ResponseEntity<List<File>> getFilesFromDataBase() {
+        try {
+            return ResponseEntity.ok(fileService.getAllFilesDB());
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }

@@ -72,8 +72,8 @@ public class FileService implements IFile {
         return fileRepository.findById(id).orElseThrow(() -> new FileNotFoundException("File not found"));
     }
 
-    public Stream<File> getAllFiles() {
-        return fileRepository.findAll().stream();
+    public List<File> getAllFilesDB() {
+        return fileRepository.findAll();
     }
 
 }
