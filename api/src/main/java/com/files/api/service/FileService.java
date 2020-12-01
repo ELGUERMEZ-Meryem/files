@@ -1,8 +1,13 @@
 package com.files.api.service;
 
 import com.files.api.constant.FileDirectoryConstants;
+import com.files.api.entity.File;
+import com.files.api.repository.FileRepository;
+import com.files.api.service.exception.FileNotFoundException;
 import com.files.api.service.exception.FileStorageException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,15 +17,18 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class FileService implements IFile {
 
     private final FileDirectoryConstants fileDirectoryConstants;
     private final Path fileStorageLocation;
+    private final FileRepository fileRepository;
 
-    public FileService(FileDirectoryConstants fileDirectoryConstants) {
+    public FileService(FileDirectoryConstants fileDirectoryConstants, FileRepository fileRepository) {
         this.fileDirectoryConstants = fileDirectoryConstants;
+        this.fileRepository = fileRepository;
         this.fileStorageLocation = Paths.get(fileDirectoryConstants.getUploadDir())
                 .toAbsolutePath().normalize();
         try {
@@ -54,4 +62,18 @@ public class FileService implements IFile {
                 .map(file -> file.getFileName().toString())
                 .collect(Collectors.toList());
     }
+
+    public File uploadFileInDB(MultipartFile file) throws IOException {
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        return fileRepository.save(File.builder().name(fileName).type(file.getContentType()).data(file.getBytes()).build());
+    }
+
+    public File getFile(Long id) {
+        return fileRepository.findById(id).orElseThrow(() -> new FileNotFoundException("File not found"));
+    }
+
+    public Stream<File> getAllFiles() {
+        return fileRepository.findAll().stream();
+    }
+
 }

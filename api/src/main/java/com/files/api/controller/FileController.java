@@ -29,8 +29,18 @@ public class FileController {
         }
     }
 
+    @PostMapping("/upload-file-database")
+    public ResponseEntity<Boolean> uploadFileInDataBase(@RequestParam("file") MultipartFile file) {
+        try {
+            fileService.uploadFileInDB(file);
+            return ResponseEntity.ok(true);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
     @PostMapping("/upload-files")
-    public ResponseEntity<Boolean> uploadFiles(@RequestParam("files[]") List<MultipartFile> files) {
+    public ResponseEntity<Boolean> uploadFiles(@RequestParam("files") List<MultipartFile> files) {
         try {
             for (MultipartFile file : files) {
                 fileService.uploadFile(file.getInputStream(), StringUtils.cleanPath(file.getOriginalFilename()));

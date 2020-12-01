@@ -80,6 +80,26 @@ export class FilesComponent implements OnInit {
     this.currentFile = undefined;
   }
 
+  uploadFileInDataBase() {
+    this.progress = 0;
+    this.currentFile = this.selectedFiles[0];
+    this.fileService.uploadInDataBase(this.currentFile).subscribe(
+      event => {
+        if (event.type === HttpEventType.UploadProgress) {
+          this.progress = Math.round(100 * event.loaded / event.total);
+        } else if (event instanceof HttpResponse) {
+          this.message = event.body.message;
+        }
+      },
+      err => {
+        this.progress = 0;
+        this.message = 'Could not upload the file!';
+        this.currentFile = undefined;
+      });
+
+    this.currentFile = undefined;
+  }
+
   uploadFilesOneRequest() {
     this.progress = 0;
 

@@ -21,11 +21,24 @@ export class FileService {
     return this.http.request(req);
   }
 
+  uploadInDataBase(file: File): Observable<HttpEvent<any>> {
+    const formData: FormData = new FormData();
+
+    formData.append('file', file);
+
+    const req = new HttpRequest('POST', `${environment.apiUrl}/upload-file-database`, formData, {
+      reportProgress: true,
+      responseType: 'json'
+    });
+
+    return this.http.request(req);
+  }
+
   uploadOneRequest(files: File[]): Observable<HttpEvent<any>> {
     const formData: FormData = new FormData();
 
     for (let file of files) {
-      formData.append('files[]', file);
+      formData.append('files', file);
     }
 
     const req = new HttpRequest('POST', `${environment.apiUrl}/upload-files`, formData, {
