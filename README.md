@@ -20,7 +20,7 @@ This application is for File upload in that user can:
 
 # Save files in the database:
 
-# Save files in the:
+# Save files in a remote server like aws:
 
 # Resources:
 https://bezkoder.com/spring-boot-upload-file-database/
